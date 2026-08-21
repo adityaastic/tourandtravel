@@ -5,7 +5,7 @@ const accessKeyId = process.env.R2_ACCESS_KEY_ID || 'ef21568c32b4b96fc02fa6132bb
 const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || '0ea8f97654494142023c696f337a23ba95533ec03ea718ac62dba4341feb0e91';
 const bucketName = process.env.R2_BUCKET_NAME || 'justourism';
 const endpoint = process.env.R2_ENDPOINT || `https://${accountId}.r2.cloudflarestorage.com`;
-const publicDomain = process.env.R2_PUBLIC_DOMAIN || '';
+const rawPublicDomain = process.env.R2_PUBLIC_DOMAIN || '';
 
 export const r2Client = new S3Client({
   region: 'auto',
@@ -18,25 +18,46 @@ export const r2Client = new S3Client({
 
 export const BUCKET_NAME = bucketName;
 
+/**
+ * Generates a browser-accessible URL for an R2 object key.
+ * If rawPublicDomain is a private S3 endpoint (contains r2.cloudflarestorage.com) or empty,
+ * it safely routes via our authenticated streaming proxy (/api/media/[...key]).
+ */
+export function getMediaUrl(key: string): string {
+  const cleanKey = key.replace(/^\//, '');
+
+  if (
+    rawPublicDomain &&
+    !rawPublicDomain.includes('r2.cloudflarestorage.com') &&
+    (rawPublicDomain.startsWith('http://') || rawPublicDomain.startsWith('https://'))
+  ) {
+    return `${rawPublicDomain.replace(/\/$/, '')}/${cleanKey}`;
+  }
+
+  // Fallback to our authenticated backend streaming proxy
+  return `/api/media/${cleanKey}`;
+}
+
 export async function uploadToR2(
   fileBuffer: Buffer,
   key: string,
   contentType: string = 'image/jpeg'
 ): Promise<{ key: string; url: string; size: number }> {
+  const cleanKey = key.replace(/^\//, '');
+
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
-    Key: key,
+    Key: cleanKey,
     Body: fileBuffer,
     ContentType: contentType,
   });
 
   await r2Client.send(command);
 
-  // If a public custom domain is configured in Cloudflare R2, use it; otherwise provide S3 endpoint / proxy path
-  const url = publicDomain ? `${publicDomain.replace(/\/$/, '')}/${key}` : `/api/media/${key}`;
+  const url = getMediaUrl(cleanKey);
 
   return {
-    key,
+    key: cleanKey,
     url,
     size: fileBuffer.length,
   };
@@ -54,9 +75,7 @@ export async function listR2Objects(prefix: string = ''): Promise<any[]> {
 
     return contents.map((item) => {
       const isVideo = (item.Key || '').match(/\.(mp4|webm|mov)$/i);
-      const publicUrl = publicDomain
-        ? `${publicDomain.replace(/\/$/, '')}/${item.Key}`
-        : `/api/media/${item.Key}`;
+      const publicUrl = getMediaUrl(item.Key || '');
 
       return {
         name: item.Key || '',
@@ -76,9 +95,10 @@ export async function listR2Objects(prefix: string = ''): Promise<any[]> {
 
 export async function deleteFromR2(key: string): Promise<boolean> {
   try {
+    const cleanKey = key.replace(/^\//, '');
     const command = new DeleteObjectCommand({
       Bucket: BUCKET_NAME,
-      Key: key,
+      Key: cleanKey,
     });
     await r2Client.send(command);
     return true;
