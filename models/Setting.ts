@@ -6,6 +6,9 @@ export interface ISetting extends Document {
   brandName: string;
   tagline: string;
   owner: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  ogImageUrl?: string;
   phones: string[];
   whatsapp: string;
   email: string;
@@ -40,6 +43,9 @@ const SettingSchema = new Schema<ISetting>(
     brandName: { type: String, default: 'Just Tourism' },
     tagline: { type: String, default: 'Explore · Travel · Enjoy' },
     owner: { type: String, default: 'Karuna Suryawanshi' },
+    logoUrl: { type: String, default: '/logo.png' },
+    faviconUrl: { type: String, default: '/favicon.ico' },
+    ogImageUrl: { type: String, default: '/og-image.jpg' },
     phones: { type: [String], default: ['+91-9911209636', '+91-8860978897'] },
     whatsapp: { type: String, default: '919911209636' },
     email: { type: String, default: 'karunadikoshiya000@gmail.com' },

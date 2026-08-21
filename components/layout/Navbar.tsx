@@ -57,9 +57,26 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex flex-col text-white">
-          <span className="font-poppins font-bold text-2xl tracking-wide">Just Tourism</span>
-          <span className="text-xs text-gray-300 font-medium">Karuna Travels</span>
+        <Link href="/" className="flex items-center gap-3 text-white group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#F5A623] to-[#E8921A] flex items-center justify-center font-bold text-white font-poppins shadow-md overflow-hidden relative">
+            <img
+              src="/logo.png"
+              alt="Just Tourism Logo"
+              className="w-full h-full object-contain"
+              onError={(e: any) => {
+                e.target.style.display = 'none';
+              }}
+            />
+            <span className="text-base tracking-tighter">JT</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-poppins font-bold text-2xl tracking-wide leading-tight group-hover:text-[#F5A623] transition-colors">
+              Just Tourism
+            </span>
+            <span className="text-xs text-gray-300 font-medium tracking-wider">
+              Karuna Travels
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}

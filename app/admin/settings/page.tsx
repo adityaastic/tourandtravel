@@ -14,6 +14,7 @@ import {
   Loader2,
   CheckCircle2,
 } from 'lucide-react';
+import BrandMediaUploader from '@/components/admin/BrandMediaUploader';
 import toast from 'react-hot-toast';
 
 export default function AdminSettingsPage() {
@@ -25,6 +26,9 @@ export default function AdminSettingsPage() {
     brandName: 'Just Tourism',
     tagline: 'Explore · Travel · Enjoy',
     owner: 'Karuna Suryawanshi',
+    logoUrl: '/logo.png',
+    faviconUrl: '/favicon.ico',
+    ogImageUrl: '/og-image.jpg',
     phones: '+91-9911209636, +91-8860978897',
     whatsapp: '919911209636',
     email: 'karunadikoshiya000@gmail.com',
@@ -65,6 +69,19 @@ export default function AdminSettingsPage() {
         setLoading(false);
       });
   }, []);
+
+  const handleAssetUpdated = async (key: string, url: string) => {
+    setSettings((prev) => ({ ...prev, [key]: url }));
+    try {
+      await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [key]: url }),
+      });
+    } catch (e) {
+      console.error('Failed to sync setting', e);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,10 +124,10 @@ export default function AdminSettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-900 font-poppins">
-            Site Settings & Business Profile
+            Site Settings & Brand Assets
           </h2>
           <p className="text-xs text-gray-500">
-            Configure contact numbers, branding, announcement marquee, social handles and SEO defaults
+            Upload company logo, browser favicon, social preview banner, contact info, marquee, and SEO
           </p>
         </div>
 
@@ -123,6 +140,14 @@ export default function AdminSettingsPage() {
           <span>Save All Settings</span>
         </button>
       </div>
+
+      {/* Brand Visual Assets Card (Logo, Favicon & OG Image) */}
+      <BrandMediaUploader
+        currentLogo={settings.logoUrl}
+        currentFavicon={settings.faviconUrl}
+        currentOgImage={settings.ogImageUrl}
+        onAssetUpdated={handleAssetUpdated}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Card 1: Branding & Profile */}

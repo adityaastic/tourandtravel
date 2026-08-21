@@ -31,6 +31,9 @@ export interface SiteSettings {
   brandName: string;
   tagline: string;
   owner: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  ogImageUrl?: string;
   phones: string[];
   whatsapp: string;
   email: string;
