@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import HeroSection from '@/components/home/HeroSection';
+import MarqueeStrip from '@/components/home/MarqueeStrip';
 import StatsBar from '@/components/home/StatsBar';
 import DestinationsGrid from '@/components/home/DestinationsGrid';
 import FeaturedPackages from '@/components/home/FeaturedPackages';
@@ -15,10 +16,13 @@ import BlogPreview from '@/components/home/BlogPreview';
 import InstagramTeaser from '@/components/home/InstagramTeaser';
 
 export const metadata: Metadata = {
-  title: 'Just Tourism - Explore India. Create Memories. | Delhi Premier Travel Agency',
-  description: 'Curated holidays, premium stays, reliable cabs and personalized travel experiences from Delhi. Book tour packages to Kashmir, Manali, Shimla, Goa, Rajasthan, Kerala & car rentals. +91-9911209636',
+  title: 'Just Tourism | Travel Packages, Cabs & Holiday Tours',
+  description: 'Discover handcrafted holiday tour packages across India, reliable outstation AC cabs, and custom trip planning with Just Tourism by Karuna Travels. +91-9911209636',
+  alternates: {
+    canonical: 'https://www.justourism.com',
+  },
   openGraph: {
-    title: 'Just Tourism — Explore India. Create Memories.',
+    title: 'Just Tourism | Travel Packages, Cabs & Holiday Tours',
     description: 'Curated holidays, premium stays, reliable cabs and personalized travel experiences across India and international destinations.',
     url: 'https://www.justourism.com',
     siteName: 'Just Tourism',
@@ -62,37 +66,40 @@ export default function HomePage() {
       {/* 1. Cinematic Hero with Floating Trip Planner */}
       <HeroSection />
 
-      {/* 2. Verified Quick Trust Bar */}
+      {/* 2. Seamless Promotional Ticker with Hover Pause */}
+      <MarqueeStrip />
+
+      {/* 3. Verified Quick Trust Bar (500+ Happy Travelers, 20+ Destinations, 15+ Premium Cars, 24/7 Support) */}
       <StatsBar />
 
-      {/* 3. Popular Destinations Bento Showcase */}
+      {/* 4. Popular Destinations Bento Showcase */}
       <DestinationsGrid />
 
-      {/* 4. Handpicked Tour Packages with Category Strips */}
+      {/* 5. Handpicked Tour Packages with Category Strips */}
       <FeaturedPackages />
 
-      {/* 5. Interactive Custom Trip Planner */}
+      {/* 6. Interactive Custom Trip Planner */}
       <CustomTripPlanner />
 
-      {/* 6. How It Works 5-Step Visual Timeline */}
+      {/* 7. How It Works 5-Step Visual Timeline */}
       <HowItWorks />
 
-      {/* 7. Travel Comfortably Fleet Preview */}
+      {/* 8. Travel Comfortably Fleet Preview */}
       <CarFleetPreview />
 
-      {/* 8. The Just Tourism Advantage */}
+      {/* 9. The Just Tourism Advantage */}
       <WhyChooseUs />
 
-      {/* 9. Verified Customer Reviews & Google Trust Badge */}
+      {/* 10. Verified Customer Reviews & Google Trust Badge */}
       <TestimonialsSlider />
 
-      {/* 10. Travel Blog Guides */}
+      {/* 11. Travel Blog Guides */}
       <BlogPreview />
 
-      {/* 11. Visual Travel Gallery & Social Showcase */}
+      {/* 12. Visual Travel Gallery & Social Showcase */}
       <InstagramTeaser />
 
-      {/* 12. Final High-Impact CTA */}
+      {/* 13. Final High-Impact CTA */}
       <CallToAction />
     </main>
   );

@@ -114,11 +114,6 @@ export default function PackageDetailPage({ params }: { params: { slug: string }
               </p>
             </div>
 
-            {/* Video */}
-            <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-100">
-              <VideoPlaceholder aspectRatio="16/9" label={`${pkg.title} Tour Highlights`} />
-            </div>
-
             {/* Why Visit Highlights */}
             {pkg.highlights && pkg.highlights.length > 0 && (
               <div>

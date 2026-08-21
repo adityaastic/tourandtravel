@@ -102,15 +102,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Video Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <ScrollFadeUp>
-          <div className="rounded-3xl overflow-hidden shadow-2xl">
-            <VideoPlaceholder aspectRatio="16/9" label="Our Story / Office Tour Video" />
-          </div>
-        </ScrollFadeUp>
-      </section>
-
       {/* Stats Section */}
       <section className="bg-[#1B2A4A] py-20 relative overflow-hidden mb-24">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
