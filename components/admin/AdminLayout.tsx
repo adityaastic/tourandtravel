@@ -12,6 +12,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [pendingInquiries, setPendingInquiries] = useState(0);
@@ -19,7 +20,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
 
-  // If on login page, skip layout wrapping
+  // Close mobile drawer on route navigation
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const isLoginPage = pathname === '/admin/login';
 
   useEffect(() => {
@@ -83,26 +88,30 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const displayTitle = currentSection.replace(/-/g, ' ');
 
   return (
-    <div className="min-h-screen bg-[#F8FAFF] flex">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-[#F8FAFF] flex relative overflow-x-hidden">
+      {/* Sidebar (Desktop + Mobile Drawer) */}
       <AdminSidebar
         collapsed={collapsed}
         setCollapsed={setCollapsed}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
         inquiryCount={pendingInquiries}
       />
 
       {/* Main Content Area */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${
-          collapsed ? 'ml-20' : 'ml-64'
-        }`}
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
+          collapsed ? 'lg:ml-20' : 'lg:ml-64'
+        } ml-0`}
       >
         <AdminTopbar
           collapsed={collapsed}
           setCollapsed={setCollapsed}
+          mobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
           title={displayTitle}
         />
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl w-full mx-auto">
           {children}
         </main>
       </div>
