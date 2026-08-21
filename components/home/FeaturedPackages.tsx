@@ -5,67 +5,92 @@ import Link from 'next/link';
 import PackageCard from '@/components/packages/PackageCard';
 import ScrollFadeUp from '@/components/animations/ScrollFadeUp';
 import { packages } from '@/lib/data/packages';
+import { Mountain, Palmtree, Trees, Castle, Plane, Compass, Sparkles } from 'lucide-react';
 
-const categories = ['All', 'Mountains', 'Beaches', 'Heritage', 'International'];
+const categories = [
+  { label: 'All Trips', icon: Compass, filter: 'All' },
+  { label: 'Mountains', icon: Mountain, filter: 'Mountains' },
+  { label: 'Beaches', icon: Palmtree, filter: 'Beaches' },
+  { label: 'Wildlife', icon: Trees, filter: 'Wildlife' },
+  { label: 'Heritage', icon: Castle, filter: 'Heritage' },
+  { label: 'International', icon: Plane, filter: 'International' },
+];
 
 export default function FeaturedPackages() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const filteredPackages = activeFilter === 'All' 
-    ? packages.slice(0, 6) 
-    : packages.filter(pkg => pkg.category?.includes(activeFilter)).slice(0, 6);
+    ? packages.slice(0, 8) 
+    : packages.filter(pkg => pkg.category?.includes(activeFilter)).slice(0, 8);
 
   return (
-    <section className="bg-white py-12 sm:py-16 md:py-20 px-3 sm:px-6 lg:px-8">
+    <section className="bg-[#FFFFFF] py-12 sm:py-16 md:py-20 px-3 sm:px-6 lg:px-8 border-b border-neutral-100">
       <div className="max-w-7xl mx-auto">
+        
+        {/* Section Header */}
         <ScrollFadeUp>
-          <div className="text-center mb-8 sm:mb-12">
-            <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F5A623] mb-2 block">
-              Handpicked Destinations
-            </span>
-            <h2 className="font-poppins font-extrabold text-2xl sm:text-4xl text-[#1B2A4A] mb-2">
-              Popular Tour Packages
-            </h2>
-            <p className="font-inter text-gray-500 text-xs sm:text-base max-w-xl mx-auto">
-              From snow-capped mountains to sun-kissed beaches, explore India and beyond.
-            </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 sm:mb-10 gap-3">
+            <div>
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#F5A623] mb-1 block">
+                Curated Travel Collections
+              </span>
+              <h2 className="font-poppins font-black text-2xl sm:text-4xl text-neutral-900">
+                Explore Top Getaways
+              </h2>
+            </div>
+            <Link 
+              href="/packages" 
+              className="text-xs sm:text-sm font-bold text-neutral-800 hover:text-[#F5A623] underline underline-offset-4 transition-colors"
+            >
+              Show all 20 packages
+            </Link>
           </div>
         </ScrollFadeUp>
 
-        {/* Filter Chips */}
+        {/* Airbnb-style Iconic Category Filter Strip */}
         <ScrollFadeUp>
-          <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2.5 mb-8 sm:mb-12">
-            {categories.map(category => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full font-poppins text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                  activeFilter === category 
-                    ? 'bg-[#F5A623] text-white shadow-md shadow-orange-500/25 scale-105' 
-                    : 'bg-[#EEF2FF] text-[#1B2A4A] hover:bg-gray-200'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          <div className="flex items-center gap-3 sm:gap-6 overflow-x-auto pb-4 mb-8 custom-scrollbar scroll-smooth no-scrollbar">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              const isActive = activeFilter === cat.filter;
+              return (
+                <button
+                  key={cat.label}
+                  onClick={() => setActiveFilter(cat.filter)}
+                  className={`flex flex-col items-center gap-1.5 pb-2 border-b-2 transition-all flex-shrink-0 cursor-pointer group ${
+                    isActive
+                      ? 'border-neutral-900 text-neutral-900 font-bold'
+                      : 'border-transparent text-neutral-400 hover:text-neutral-700 hover:border-neutral-200'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:scale-110 ${
+                    isActive ? 'text-neutral-900' : 'text-neutral-400 group-hover:text-neutral-700'
+                  }`} />
+                  <span className="text-xs sm:text-sm whitespace-nowrap">
+                    {cat.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </ScrollFadeUp>
 
-        {/* 2-Column on Mobile, 3-Column on Desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+        {/* 2-Column Mobile, 4-Column Desktop Airbnb Cards Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredPackages.map((pkg, index) => (
-            <ScrollFadeUp key={pkg.id || index} delay={index * 0.05}>
+            <ScrollFadeUp key={pkg.id || index} delay={index * 0.04}>
               <PackageCard pkg={pkg} />
             </ScrollFadeUp>
           ))}
         </div>
 
-        <div className="mt-10 sm:mt-14 text-center">
+        {/* View All Button */}
+        <div className="mt-12 text-center">
           <Link 
             href="/packages" 
-            className="inline-flex items-center justify-center bg-[#1B2A4A] hover:bg-[#0F1A2E] text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-poppins font-bold text-xs sm:text-sm shadow-lg transition-all hover:scale-105 active:scale-95"
+            className="inline-flex items-center justify-center bg-neutral-900 hover:bg-neutral-800 text-white px-8 py-3.5 rounded-xl font-poppins font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95"
           >
-            <span>View All 20 Packages →</span>
+            <span>Show All 20 Destinations</span>
           </Link>
         </div>
       </div>

@@ -11,6 +11,9 @@ import {
   Sparkles,
   Loader2,
   Image as ImageIcon,
+  CheckCircle,
+  XCircle,
+  Calendar,
 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -38,6 +41,9 @@ export default function CarForm({ initialData, isEditing = false }: CarFormProps
     popularFor: Array.isArray(initialData?.popularFor) ? initialData.popularFor.join(', ') : (initialData?.popularFor || 'Outstation, Hill Stations, Family Tours'),
     description: initialData?.description || '',
     photoSlot: initialData?.photoSlot || 'car-default',
+    isAvailable: initialData?.isAvailable ?? true,
+    status: initialData?.status || 'Available',
+    unavailableDates: Array.isArray(initialData?.unavailableDates) ? initialData.unavailableDates.join(', ') : (initialData?.unavailableDates || ''),
   });
 
   const categories = ['Hatchback', 'Sedan', 'MUV', 'Premium MUV', 'Compact SUV', 'Body-on-Frame SUV', 'Premium SUV', 'Off-Road SUV', 'MPV/Van'];
@@ -60,6 +66,7 @@ export default function CarForm({ initialData, isEditing = false }: CarFormProps
         minimumKm: Number(formData.minimumKm),
         features: formData.features.split(',').map((s: string) => s.trim()).filter(Boolean),
         popularFor: formData.popularFor.split(',').map((s: string) => s.trim()).filter(Boolean),
+        unavailableDates: formData.unavailableDates ? formData.unavailableDates.split(',').map((s: string) => s.trim()).filter(Boolean) : [],
       };
 
       const url = isEditing
@@ -105,6 +112,54 @@ export default function CarForm({ initialData, isEditing = false }: CarFormProps
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           <span>{isEditing ? 'Update Vehicle' : 'Add Vehicle to Fleet'}</span>
         </button>
+      </div>
+
+      {/* Availability Card */}
+      <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-3xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h4 className="font-bold text-emerald-950 text-base font-poppins flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-emerald-600" />
+              <span>Fleet Availability Control</span>
+            </h4>
+            <p className="text-xs text-emerald-800/80">
+              Set whether this vehicle is currently available for customers to book online.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <select
+              value={formData.status}
+              onChange={(e) => {
+                const val = e.target.value;
+                setFormData({
+                  ...formData,
+                  status: val as any,
+                  isAvailable: val === 'Available',
+                });
+              }}
+              className="px-3.5 py-2 rounded-xl bg-white border border-emerald-300 font-bold text-xs text-emerald-900 shadow-sm focus:outline-none"
+            >
+              <option value="Available">🟢 Available for Booking</option>
+              <option value="Booked">🔴 Out on Trip / Booked</option>
+              <option value="Maintenance">🟡 Under Maintenance</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-emerald-950 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Unavailable Specific Dates (Optional, Comma-separated YYYY-MM-DD)</span>
+          </label>
+          <input
+            type="text"
+            value={formData.unavailableDates}
+            onChange={(e) => setFormData({ ...formData, unavailableDates: e.target.value })}
+            placeholder="e.g. 2026-08-25, 2026-08-26, 2026-09-01"
+            className="w-full px-3.5 py-2.5 bg-white border border-emerald-200 rounded-xl text-xs text-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none"
+          />
+        </div>
       </div>
 
       <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 space-y-6">

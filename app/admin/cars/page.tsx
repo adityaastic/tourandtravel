@@ -14,6 +14,9 @@ import {
   ExternalLink,
   Loader2,
   Snowflake,
+  CheckCircle2,
+  XCircle,
+  Clock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -22,6 +25,7 @@ export default function AdminCarsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   const fetchCars = async () => {
     try {
@@ -38,6 +42,33 @@ export default function AdminCarsPage() {
   useEffect(() => {
     fetchCars();
   }, []);
+
+  const handleToggleAvailability = async (car: any) => {
+    const nextStatus = car.status === 'Available' || car.isAvailable !== false ? 'Booked' : 'Available';
+    const nextIsAvailable = nextStatus === 'Available';
+
+    try {
+      const res = await fetch(`/api/admin/cars/${car.id || car.slug}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: nextStatus,
+          isAvailable: nextIsAvailable,
+        }),
+      });
+
+      if (!res.ok) throw new Error('Update failed');
+
+      toast.success(`${car.name} is now ${nextStatus}`);
+      setCars(cars.map((c) =>
+        (c.id === car.id || c.slug === car.slug)
+          ? { ...c, status: nextStatus, isAvailable: nextIsAvailable }
+          : c
+      ));
+    } catch {
+      toast.error('Failed to change status');
+    }
+  };
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to remove "${name}" from fleet?`)) return;
@@ -61,7 +92,13 @@ export default function AdminCarsPage() {
       categoryFilter === 'All' ||
       c.category.toLowerCase().includes(categoryFilter.toLowerCase());
 
-    return matchesSearch && matchesCat;
+    const isAvail = c.isAvailable !== false && c.status !== 'Booked' && c.status !== 'Maintenance';
+    const matchesStatus =
+      statusFilter === 'All' ||
+      (statusFilter === 'Available' && isAvail) ||
+      (statusFilter === 'Booked' && !isAvail);
+
+    return matchesSearch && matchesCat && matchesStatus;
   });
 
   const categories = ['All', 'Hatchback', 'Sedan', 'SUV', 'MUV', 'Premium'];
@@ -72,10 +109,10 @@ export default function AdminCarsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-900 font-poppins">
-            Fleet Vehicles ({cars.length})
+            Fleet Vehicles & Availability ({cars.length})
           </h2>
           <p className="text-xs text-gray-500">
-            Manage your AC cabs, per km rates, day packages, and passenger capacities
+            Control live online availability, per-km rates, driver status, and car models
           </p>
         </div>
 
@@ -101,6 +138,24 @@ export default function AdminCarsPage() {
           />
         </div>
 
+        {/* Availability Toggle Filter */}
+        <div className="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+          {['All', 'Available', 'Booked'].map((status) => (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                statusFilter === status
+                  ? 'bg-neutral-900 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {status === 'Available' ? '🟢 Available' : status === 'Booked' ? '🔴 Booked' : 'All Fleet'}
+            </button>
+          ))}
+        </div>
+
+        {/* Category Filters */}
         <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 custom-scrollbar">
           {categories.map((cat) => (
             <button
@@ -108,7 +163,7 @@ export default function AdminCarsPage() {
               onClick={() => setCategoryFilter(cat)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 categoryFilter === cat
-                  ? 'bg-[#1B2A4A] text-white'
+                  ? 'bg-[#F5A623] text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -128,96 +183,109 @@ export default function AdminCarsPage() {
         <div className="bg-white rounded-2xl p-12 text-center border border-gray-100 space-y-3">
           <Car className="w-12 h-12 text-gray-300 mx-auto" />
           <h3 className="font-bold text-gray-800 font-poppins">No cars found</h3>
-          <p className="text-xs text-gray-500">Try changing your search keywords.</p>
+          <p className="text-xs text-gray-500">Try changing your search keywords or filter.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((car) => (
-            <div
-              key={car.id || car.slug}
-              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all group"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/60">
-                    {car.category}
-                  </span>
-                  {car.ac && (
-                    <span className="flex items-center gap-1 text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-                      <Snowflake className="w-3 h-3" /> AC
+          {filtered.map((car) => {
+            const isAvail = car.isAvailable !== false && car.status !== 'Booked' && car.status !== 'Maintenance';
+
+            return (
+              <div
+                key={car.id || car.slug}
+                className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-all group"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-neutral-100 text-neutral-800 border border-neutral-200/60">
+                      {car.category}
                     </span>
+
+                    {/* Quick Live Availability Badge & Toggle */}
+                    <button
+                      onClick={() => handleToggleAvailability(car)}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold shadow-xs transition-all cursor-pointer ${
+                        isAvail
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100'
+                          : 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
+                      }`}
+                      title="Click to toggle availability"
+                    >
+                      <span className={`w-2 h-2 rounded-full ${isAvail ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+                      <span>{isAvail ? 'Online Available' : 'Booked / Off'}</span>
+                    </button>
+                  </div>
+
+                  <h3 className="font-bold text-gray-900 font-poppins text-lg group-hover:text-[#F5A623] transition-colors leading-tight mb-2">
+                    {car.name}
+                  </h3>
+
+                  <div className="grid grid-cols-3 gap-2 p-3 bg-gray-50 rounded-xl mb-4 text-center">
+                    <div>
+                      <span className="text-[10px] text-gray-400 uppercase block font-medium">Seating</span>
+                      <span className="text-xs font-bold text-gray-800">{car.seating} Seats</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-400 uppercase block font-medium">Fuel</span>
+                      <span className="text-xs font-bold text-gray-800">{car.fuelType}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-400 uppercase block font-medium">Transmission</span>
+                      <span className="text-xs font-bold text-gray-800">{car.transmission || 'Manual'}</span>
+                    </div>
+                  </div>
+
+                  {car.popularFor && car.popularFor.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {car.popularFor.slice(0, 2).map((tag: string, i: number) => (
+                        <span key={i} className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </div>
 
-                <h3 className="font-bold text-gray-900 font-poppins text-lg group-hover:text-[#F5A623] transition-colors leading-tight mb-2">
-                  {car.name}
-                </h3>
-
-                <div className="grid grid-cols-3 gap-2 p-3 bg-gray-50 rounded-xl mb-4 text-center">
+                <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-gray-400 uppercase block font-medium">Seating</span>
-                    <span className="text-xs font-bold text-gray-800">{car.seating} Seater</span>
+                    <div className="text-sm font-extrabold text-[#F5A623] font-poppins">
+                      ₹{car.pricePerKm}/km
+                    </div>
+                    <div className="text-[11px] text-gray-400">
+                      ₹{car.pricePerDay}/day (min {car.minimumKm || 250}km)
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-gray-400 uppercase block font-medium">Fuel</span>
-                    <span className="text-xs font-bold text-gray-800">{car.fuelType}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-gray-400 uppercase block font-medium">Transmission</span>
-                    <span className="text-xs font-bold text-gray-800">{car.transmission || 'Manual'}</span>
-                  </div>
-                </div>
 
-                {car.popularFor && car.popularFor.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {car.popularFor.slice(0, 2).map((tag: string, i: number) => (
-                      <span key={i} className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="/car-booking"
+                      target="_blank"
+                      className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      title="View live page"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </Link>
+
+                    <Link
+                      href={`/admin/cars/${car.id || car.slug}/edit`}
+                      className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                      title="Edit car"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Link>
+
+                    <button
+                      onClick={() => handleDelete(car.id || car.slug, car.name)}
+                      className="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors cursor-pointer"
+                      title="Delete car"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                )}
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-extrabold text-[#F5A623] font-poppins">
-                    ₹{car.pricePerKm}/km
-                  </div>
-                  <div className="text-[11px] text-gray-400">
-                    ₹{car.pricePerDay}/day (min {car.minimumKm || 250}km)
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Link
-                    href="/car-booking"
-                    target="_blank"
-                    className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                    title="View live page"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </Link>
-
-                  <Link
-                    href={`/admin/cars/${car.id || car.slug}/edit`}
-                    className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
-                    title="Edit car"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Link>
-
-                  <button
-                    onClick={() => handleDelete(car.id || car.slug, car.name)}
-                    className="p-2 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors cursor-pointer"
-                    title="Delete car"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

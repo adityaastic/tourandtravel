@@ -1,0 +1,61 @@
+[
+  {
+    "id": "inq-101",
+    "name": "Rahul Sharma",
+    "phone": "+91-9876543210",
+    "email": "rahul.s@gmail.com",
+    "type": "package",
+    "itemName": "Manali — Adventure Capital of India",
+    "travelDate": "2026-09-15",
+    "returnDate": "2026-09-20",
+    "passengers": 4,
+    "message": "Need 2 deluxe rooms with river view and private cab for Rohtang pass.",
+    "status": "confirmed",
+    "notes": "Advance received. Assigned Innova Crysta.",
+    "createdAt": "2026-08-19T21:18:26.442Z"
+  },
+  {
+    "id": "inq-102",
+    "name": "Pooja Aggarwal",
+    "phone": "+91-9811223344",
+    "email": "pooja.agg@outlook.com",
+    "type": "car",
+    "itemName": "Toyota Innova (Crysta)",
+    "travelDate": "2026-08-28",
+    "pickupLocation": "Daryaganj, Delhi",
+    "dropLocation": "Agra Taj Mahal & Return",
+    "passengers": 6,
+    "message": "Same day Agra return trip. Need experienced driver.",
+    "status": "new",
+    "notes": "Quoted standard outstation per km rate.",
+    "createdAt": "2026-08-21T17:18:26.442Z"
+  },
+  {
+    "id": "inq-103",
+    "name": "Amitabh Verma",
+    "phone": "+91-9988776655",
+    "email": "amitabh.v@gmail.com",
+    "type": "package",
+    "itemName": "Kashmir — Paradise on Earth",
+    "travelDate": "2026-10-05",
+    "returnDate": "2026-10-11",
+    "passengers": 2,
+    "message": "Honeymoon couple special setup with houseboat at Dal lake.",
+    "status": "contacted",
+    "notes": "Sent customized itinerary on WhatsApp.",
+    "createdAt": "2026-08-20T21:18:26.442Z"
+  },
+  {
+    "id": "inq-104",
+    "name": "Vikas Mehra",
+    "phone": "+91-9711002233",
+    "type": "custom",
+    "travelDate": "2026-09-02",
+    "pickupLocation": "Delhi Airport T3",
+    "dropLocation": "Jim Corbett Resort",
+    "passengers": 5,
+    "message": "Require Mahindra Scorpio N for jungle trip 3 days.",
+    "status": "new",
+    "createdAt": "2026-08-21T20:48:26.442Z"
+  }
+]

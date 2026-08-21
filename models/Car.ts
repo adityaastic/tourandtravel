@@ -16,6 +16,9 @@ export interface ICar extends Document {
   popularFor: string[];
   description?: string;
   photoSlot: string;
+  isAvailable: boolean;
+  status: 'Available' | 'Booked' | 'Maintenance';
+  unavailableDates: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,6 +39,9 @@ const CarSchema = new Schema<ICar>(
     popularFor: { type: [String], default: [] },
     description: { type: String, default: '' },
     photoSlot: { type: String, default: '' },
+    isAvailable: { type: Boolean, default: true },
+    status: { type: String, enum: ['Available', 'Booked', 'Maintenance'], default: 'Available' },
+    unavailableDates: { type: [String], default: [] },
   },
   {
     timestamps: true,

@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import { BsFuelPump, BsCheckCircleFill, BsPeopleFill } from 'react-icons/bs';
+import { BsFuelPump, BsPeopleFill } from 'react-icons/bs';
 import { Snowflake, ShieldCheck, ArrowRight } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import PhotoPlaceholder from '@/components/media/PhotoPlaceholder';
@@ -15,76 +14,68 @@ export default function CarCard({ car }: { car: any }) {
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.25 }}
-      className="bg-white rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-xl border border-gray-100 overflow-hidden flex flex-col h-full transition-all group justify-between"
-    >
-      <div>
-        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-          <PhotoPlaceholder label={car.name} slot={car.photoSlot} />
-          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-[#0F1A2E]/85 backdrop-blur-md text-white text-[9px] sm:text-[11px] font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md z-10 flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#F5A623]" />
+    <div className="group block w-full text-left">
+      <div className="flex flex-col">
+        {/* 1. Airbnb Car Photo Container */}
+        <div className="relative aspect-[4/3] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-neutral-100 mb-2.5 sm:mb-3 shadow-xs group-hover:shadow-md transition-all duration-300">
+          <PhotoPlaceholder label={car.name} slot={car.photoSlot} className="w-full h-full object-cover" />
+          
+          <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 bg-white/90 backdrop-blur-md text-neutral-900 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full shadow-xs">
+            {car.category || 'AC Fleet'}
+          </div>
+
+          <div className="absolute top-2.5 sm:top-3 right-2.5 sm:right-3 bg-neutral-900/80 backdrop-blur-md text-white text-[9px] sm:text-[11px] font-semibold px-2 sm:px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            <ShieldCheck className="w-3 h-3 text-[#F5A623]" />
             <span>Verified</span>
           </div>
         </div>
 
-        <div className="p-3 sm:p-5">
-          <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-            <h3 className="font-poppins font-bold text-sm sm:text-base md:text-lg text-gray-900 group-hover:text-[#F5A623] transition-colors line-clamp-1">
+        {/* 2. Airbnb Meta Section */}
+        <div>
+          <div className="flex justify-between items-baseline mb-1">
+            <h3 className="font-poppins font-bold text-xs sm:text-base text-neutral-900 group-hover:text-[#F5A623] transition-colors line-clamp-1">
               {car.name}
             </h3>
-            <span className="text-[9px] sm:text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase hidden sm:inline">
-              {car.category || 'AC Cab'}
+            <span className="text-[11px] sm:text-xs font-semibold text-emerald-600">
+              ● Available
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3 text-[10px] sm:text-xs font-medium text-gray-600">
-            <div className="flex items-center gap-1 bg-gray-50 border border-gray-200/60 px-2 py-0.5 sm:py-1 rounded-md">
-              <BsPeopleFill className="text-[#F5A623]" />
-              <span>{car.seating}S</span>
-            </div>
-            <div className="flex items-center gap-1 bg-gray-50 border border-gray-200/60 px-2 py-0.5 sm:py-1 rounded-md">
-              <BsFuelPump className="text-[#F5A623]" />
-              <span>{car.fuelType}</span>
-            </div>
-            <div className="flex items-center gap-1 bg-gray-50 border border-gray-200/60 px-2 py-0.5 sm:py-1 rounded-md">
-              <Snowflake className="w-3 h-3 text-blue-500" />
-              <span>{car.ac ? 'AC' : 'Non-AC'}</span>
-            </div>
+          {/* Specs */}
+          <div className="flex items-center gap-2 mb-2 text-[11px] sm:text-xs text-neutral-500 font-medium">
+            <span>{car.seating} Seats</span>
+            <span>·</span>
+            <span>{car.fuelType}</span>
+            <span>·</span>
+            <span>{car.ac ? 'AC' : 'Non-AC'}</span>
           </div>
-        </div>
-      </div>
 
-      <div className="p-3 sm:p-5 pt-0 sm:pt-0">
-        <div className="pt-2 sm:pt-3 border-t border-gray-100 space-y-2">
-          <div className="flex justify-between items-baseline">
+          {/* Pricing Row */}
+          <div className="flex items-baseline justify-between pt-1 border-t border-neutral-100 mb-2.5">
             <div>
-              <p className="text-[9px] sm:text-[10px] text-gray-400 font-medium uppercase">Rate</p>
-              <p className="text-[#F5A623] font-extrabold text-sm sm:text-base font-poppins">
+              <span className="font-poppins font-black text-sm sm:text-base text-neutral-900">
                 ₹{car.pricePerKm}
-                <span className="text-[9px] sm:text-xs font-normal text-gray-500">/km</span>
-              </p>
+              </span>
+              <span className="font-inter text-[11px] sm:text-xs text-neutral-500">
+                {' '}/ km
+              </span>
             </div>
-            <div className="text-right">
-              <p className="text-[9px] sm:text-[10px] text-gray-400 font-medium uppercase">Day Cab</p>
-              <p className="text-gray-900 font-bold text-xs sm:text-sm font-poppins">
-                ₹{car.pricePerDay}
-                <span className="text-[9px] sm:text-xs font-normal text-gray-500">/d</span>
-              </p>
-            </div>
+            <span className="text-[11px] sm:text-xs text-neutral-500">
+              ₹{car.pricePerDay} / day
+            </span>
           </div>
 
+          {/* Book Button */}
           <button
             onClick={handleBook}
-            className="w-full bg-[#1B2A4A] hover:bg-[#0F1A2E] text-white font-poppins font-bold text-[11px] sm:text-xs py-2 sm:py-2.5 px-2.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+            className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-poppins font-bold text-xs py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
           >
             <FaWhatsapp className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Book Cab</span>
+            <span>Book on WhatsApp</span>
             <ArrowRight className="w-3 h-3" />
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
