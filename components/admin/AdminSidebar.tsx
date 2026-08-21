@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import BrandLogo from '@/components/shared/BrandLogo';
 
 interface AdminSidebarProps {
   collapsed: boolean;
@@ -80,21 +81,7 @@ export default function AdminSidebar({
       >
         {/* Brand Header */}
         <div className="h-20 flex items-center justify-between px-4 border-b border-white/10">
-          <Link href="/admin" className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#F5A623] to-[#E8921A] flex items-center justify-center flex-shrink-0 shadow-lg shadow-orange-500/25">
-              <Compass className="w-6 h-6 text-white" />
-            </div>
-            {(!collapsed || mobileOpen) && (
-              <div className="flex flex-col min-w-0">
-                <span className="font-bold text-base leading-tight tracking-tight text-white font-poppins truncate">
-                  Just Tourism
-                </span>
-                <span className="text-[11px] text-[#F5A623] font-medium tracking-wide truncate">
-                  Admin Control Center
-                </span>
-              </div>
-            )}
-          </Link>
+          <BrandLogo variant="admin" showSubtitle={!collapsed || mobileOpen} />
 
           {/* Close button on mobile */}
           {setMobileOpen && (

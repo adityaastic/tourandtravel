@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FaStar } from 'react-icons/fa';
-import PhotoPlaceholder from '@/components/media/PhotoPlaceholder';
+import PackageCard from '@/components/packages/PackageCard';
 import ScrollFadeUp from '@/components/animations/ScrollFadeUp';
 import { packages } from '@/lib/data/packages';
 
@@ -17,24 +16,32 @@ export default function FeaturedPackages() {
     : packages.filter(pkg => pkg.category?.includes(activeFilter)).slice(0, 6);
 
   return (
-    <section className="bg-white py-20 px-4 sm:px-6 lg:px-8">
+    <section className="bg-white py-12 sm:py-16 md:py-20 px-3 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <ScrollFadeUp>
-          <div className="text-center mb-12">
-            <h2 className="font-poppins font-bold text-4xl text-[#1B2A4A] mb-4">🌟 Our Handpicked Destinations</h2>
-            <p className="font-inter text-gray-600 text-lg">From snow-capped mountains to sun-kissed beaches</p>
+          <div className="text-center mb-8 sm:mb-12">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F5A623] mb-2 block">
+              Handpicked Destinations
+            </span>
+            <h2 className="font-poppins font-extrabold text-2xl sm:text-4xl text-[#1B2A4A] mb-2">
+              Popular Tour Packages
+            </h2>
+            <p className="font-inter text-gray-500 text-xs sm:text-base max-w-xl mx-auto">
+              From snow-capped mountains to sun-kissed beaches, explore India and beyond.
+            </p>
           </div>
         </ScrollFadeUp>
 
+        {/* Filter Chips */}
         <ScrollFadeUp>
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2.5 mb-8 sm:mb-12">
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setActiveFilter(category)}
-                className={`px-6 py-2 rounded-full font-poppins font-medium transition-colors duration-300 ${
+                className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full font-poppins text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   activeFilter === category 
-                    ? 'bg-[#F5A623] text-white shadow-md' 
+                    ? 'bg-[#F5A623] text-white shadow-md shadow-orange-500/25 scale-105' 
                     : 'bg-[#EEF2FF] text-[#1B2A4A] hover:bg-gray-200'
                 }`}
               >
@@ -44,55 +51,21 @@ export default function FeaturedPackages() {
           </div>
         </ScrollFadeUp>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 2-Column on Mobile, 3-Column on Desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {filteredPackages.map((pkg, index) => (
-            <ScrollFadeUp key={pkg.id || index} delay={index * 0.1}>
-              <div className="group relative rounded-2xl overflow-hidden shadow-lg bg-white block">
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  <PhotoPlaceholder label={pkg.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                  
-                  {/* Badges */}
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-[#1B2A4A]">
-                    {pkg.category?.[0] || 'Tour'}
-                  </div>
-                  <div className="absolute top-4 right-4 bg-[#1B2A4A]/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-white">
-                    {pkg.duration}
-                  </div>
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  
-                  {/* Content Overlay */}
-                  <div className="absolute bottom-0 left-0 p-6 w-full">
-                    <h3 className="text-white font-poppins text-2xl font-bold mb-2">{pkg.title}</h3>
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <p className="text-gray-300 text-sm mb-1">Starting from</p>
-                        <p className="text-[#FCD34D] font-bold text-xl">₹{pkg.startingPrice}</p>
-                      </div>
-                      <div className="flex items-center space-x-1 bg-black/40 px-2 py-1 rounded">
-                        <FaStar className="text-[#F5A623] w-4 h-4" />
-                        <span className="text-white text-sm font-bold">{pkg.rating}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Hover Reveal Link */}
-                <div className="absolute inset-x-0 bottom-0 bg-[#F5A623] text-center py-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <Link href={`/packages/${pkg.slug || pkg.id}`} className="font-poppins font-bold text-white flex items-center justify-center space-x-2">
-                    <span>View Details</span>
-                    <span>→</span>
-                  </Link>
-                </div>
-              </div>
+            <ScrollFadeUp key={pkg.id || index} delay={index * 0.05}>
+              <PackageCard pkg={pkg} />
             </ScrollFadeUp>
           ))}
         </div>
 
-        <div className="mt-16 text-center">
-          <Link href="/packages" className="inline-flex items-center justify-center bg-[#1B2A4A] hover:bg-[#0F1A2E] text-white px-8 py-4 rounded-lg font-poppins font-semibold text-lg transition-colors duration-300">
-            View All Packages →
+        <div className="mt-10 sm:mt-14 text-center">
+          <Link 
+            href="/packages" 
+            className="inline-flex items-center justify-center bg-[#1B2A4A] hover:bg-[#0F1A2E] text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-poppins font-bold text-xs sm:text-sm shadow-lg transition-all hover:scale-105 active:scale-95"
+          >
+            <span>View All 20 Packages →</span>
           </Link>
         </div>
       </div>

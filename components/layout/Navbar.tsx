@@ -50,13 +50,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-[#1B2A4A]/95 backdrop-blur-md shadow-lg py-3" : "bg-transparent py-5"
+      className={`fixed top-0 w-full z-50 transition-all duration-300 h-16 sm:h-18 flex items-center overflow-visible ${
+        scrolled ? "bg-[#0F1A2E]/95 backdrop-blur-md shadow-xl" : "bg-gradient-to-b from-[#0F1A2E]/90 via-[#0F1A2E]/40 to-transparent"
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between overflow-visible">
         {/* Brand Logo */}
         <BrandLogo variant="navbar" />
 

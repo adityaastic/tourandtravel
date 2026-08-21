@@ -1,9 +1,18 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaWhatsapp, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <footer className="bg-[#0F1A2E] text-white pt-16">
       <div className="container mx-auto px-4 md:px-6">

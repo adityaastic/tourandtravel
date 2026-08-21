@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function WhatsAppFAB() {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -14,6 +16,10 @@ export default function WhatsAppFAB() {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <AnimatePresence>

@@ -16,7 +16,7 @@ export default function CarCatalog() {
   return (
     <div>
       <CarCategoryTabs categories={categories} activeCategory={activeCategory} onChange={setActiveCategory} />
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <motion.div layout className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
         <AnimatePresence>
           {filteredCars.map(car => (
             <motion.div key={car.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.3 }}>
