@@ -1,69 +1,82 @@
-import Image from "next/image";
+import React from 'react';
+import type { Metadata } from 'next';
 
-export default function Home() {
+import HeroSection from '@/components/home/HeroSection';
+import MarqueeStrip from '@/components/home/MarqueeStrip';
+import StatsBar from '@/components/home/StatsBar';
+import FeaturedPackages from '@/components/home/FeaturedPackages';
+import WhyChooseUs from '@/components/home/WhyChooseUs';
+import CarFleetPreview from '@/components/home/CarFleetPreview';
+import DestinationsGrid from '@/components/home/DestinationsGrid';
+import TestimonialsSlider from '@/components/home/TestimonialsSlider';
+import CallToAction from '@/components/home/CallToAction';
+import BlogPreview from '@/components/home/BlogPreview';
+import InstagramTeaser from '@/components/home/InstagramTeaser';
+
+// Reusable divider
+const WaveDivider = () => (
+  <div className="w-full overflow-hidden leading-[0] transform rotate-180">
+    <svg className="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-[#F8FAFF]"></path>
+    </svg>
+  </div>
+);
+
+export const metadata: Metadata = {
+  title: 'Karuna Travels - Just Tourism | Explore · Travel · Enjoy',
+  description: 'India\'s Most Trusted Travel Partner. Explore the world with Karuna Travels. We offer premium travel packages, car rentals, and custom itineraries.',
+};
+
+export default function HomePage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "name": "Karuna Travels",
+    "alternateName": "Just Tourism",
+    "image": "https://karunatravels.com/logo.png",
+    "description": "Delhi's Premier Travel Agency offering customized tour packages, premium car bookings, and safe travel experiences.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Krishna Dry Clean, Dayanand Road, Daryaganj",
+      "addressLocality": "Delhi",
+      "postalCode": "110002",
+      "addressCountry": "IN"
+    },
+    "telephone": "+91-9911209636",
+    "email": "karunadikoshiya000@gmail.com",
+    "url": "https://karunatravels.com",
+    "founder": {
+      "@type": "Person",
+      "name": "Karuna Suryawanshi"
+    },
+    "sameAs": [
+      "https://instagram.com/karunatravels"
+    ]
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-screen bg-[#F8FAFF]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
+      <HeroSection />
+      <MarqueeStrip />
+      <StatsBar />
+      <WaveDivider />
+      <FeaturedPackages />
+      <WaveDivider />
+      <WhyChooseUs />
+      <WaveDivider />
+      <CarFleetPreview />
+      <WaveDivider />
+      <DestinationsGrid />
+      <WaveDivider />
+      <TestimonialsSlider />
+      <CallToAction />
+      <BlogPreview />
+      <InstagramTeaser />
+    </main>
   );
 }
