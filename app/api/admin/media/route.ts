@@ -10,40 +10,56 @@ export async function GET() {
     try {
       r2Media = await listR2Objects();
     } catch (err) {
-      console.warn('R2 listing failed, falling back to local files:', err);
+      console.warn('R2 listing notice:', err);
     }
 
-    // 2. Fetch Local Files
-    const imagesDir = path.join(process.cwd(), 'public', 'images');
-    const videosDir = path.join(process.cwd(), 'public', 'videos');
+    // 2. Fetch Local Files safely
+    let localImages: any[] = [];
+    let localVideos: any[] = [];
 
-    const localImages = fs.existsSync(imagesDir)
-      ? fs.readdirSync(imagesDir).filter((f) => !f.startsWith('.')).map((filename) => {
-          const stats = fs.statSync(path.join(imagesDir, filename));
-          return {
-            name: filename,
-            type: 'image',
-            path: `/images/${filename}`,
-            size: (stats.size / 1024).toFixed(1) + ' KB',
-            modified: stats.mtime.toISOString(),
-            isR2: false,
-          };
-        })
-      : [];
+    try {
+      const imagesDir = path.join(process.cwd(), 'public', 'images');
+      if (fs.existsSync(imagesDir)) {
+        localImages = fs
+          .readdirSync(imagesDir)
+          .filter((f) => !f.startsWith('.'))
+          .map((filename) => {
+            const stats = fs.statSync(path.join(imagesDir, filename));
+            return {
+              name: filename,
+              type: 'image',
+              path: `/images/${filename}`,
+              size: (stats.size / 1024).toFixed(1) + ' KB',
+              modified: stats.mtime.toISOString(),
+              isR2: false,
+            };
+          });
+      }
+    } catch (fsErr) {
+      // Ignored on read-only environments
+    }
 
-    const localVideos = fs.existsSync(videosDir)
-      ? fs.readdirSync(videosDir).filter((f) => !f.startsWith('.')).map((filename) => {
-          const stats = fs.statSync(path.join(videosDir, filename));
-          return {
-            name: filename,
-            type: 'video',
-            path: `/videos/${filename}`,
-            size: (stats.size / (1024 * 1024)).toFixed(2) + ' MB',
-            modified: stats.mtime.toISOString(),
-            isR2: false,
-          };
-        })
-      : [];
+    try {
+      const videosDir = path.join(process.cwd(), 'public', 'videos');
+      if (fs.existsSync(videosDir)) {
+        localVideos = fs
+          .readdirSync(videosDir)
+          .filter((f) => !f.startsWith('.'))
+          .map((filename) => {
+            const stats = fs.statSync(path.join(videosDir, filename));
+            return {
+              name: filename,
+              type: 'video',
+              path: `/videos/${filename}`,
+              size: (stats.size / (1024 * 1024)).toFixed(2) + ' MB',
+              modified: stats.mtime.toISOString(),
+              isR2: false,
+            };
+          });
+      }
+    } catch (fsErr) {
+      // Ignored on read-only environments
+    }
 
     // Merge R2 & local, deduplicating by name
     const allImages = [...r2Media.filter((m) => m.type === 'image'), ...localImages];
