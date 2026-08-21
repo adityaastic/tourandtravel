@@ -21,6 +21,18 @@ interface BrandMediaUploaderProps {
   onAssetUpdated: (key: string, url: string) => void;
 }
 
+function cleanUrl(url?: string): string {
+  if (!url) return '';
+  if (url.includes('.r2.cloudflarestorage.com/')) {
+    const parts = url.split('.r2.cloudflarestorage.com/');
+    if (parts[1]) {
+      const cleanKey = parts[1].replace(/^justourism\//, '');
+      return `/api/media/${cleanKey}`;
+    }
+  }
+  return url;
+}
+
 export default function BrandMediaUploader({
   currentLogo = '/logo.png',
   currentFavicon = '/favicon.ico',
@@ -31,6 +43,10 @@ export default function BrandMediaUploader({
   const [logoImgError, setLogoImgError] = useState(false);
   const [faviconImgError, setFaviconImgError] = useState(false);
   const [ogImgError, setOgImgError] = useState(false);
+
+  const safeLogo = cleanUrl(currentLogo);
+  const safeFavicon = cleanUrl(currentFavicon);
+  const safeOgImage = cleanUrl(currentOgImage);
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -109,9 +125,9 @@ export default function BrandMediaUploader({
 
             {/* Preview Box */}
             <div className="h-28 bg-[#0F1A2E] rounded-xl flex items-center justify-center p-4 overflow-hidden shadow-inner border border-white/10 relative">
-              {currentLogo && !logoImgError ? (
+              {safeLogo && !logoImgError ? (
                 <img
-                  src={currentLogo}
+                  src={safeLogo}
                   alt="Brand Logo"
                   className="max-h-20 max-w-full object-contain"
                   onError={() => setLogoImgError(true)}
@@ -180,9 +196,9 @@ export default function BrandMediaUploader({
             <div className="h-28 bg-white rounded-xl flex items-center justify-center p-4 shadow-inner border border-gray-200">
               <div className="flex items-center gap-2.5 px-3.5 py-2 bg-gray-100 rounded-xl border border-gray-200 text-xs font-medium text-gray-800 shadow-sm max-w-full">
                 <div className="w-6 h-6 rounded-lg bg-[#F5A623] flex items-center justify-center text-white flex-shrink-0 overflow-hidden shadow-xs">
-                  {currentFavicon && !faviconImgError ? (
+                  {safeFavicon && !faviconImgError ? (
                     <img
-                      src={currentFavicon}
+                      src={safeFavicon}
                       alt="Favicon"
                       className="w-full h-full object-cover"
                       onError={() => setFaviconImgError(true)}
@@ -242,9 +258,9 @@ export default function BrandMediaUploader({
 
             {/* Preview Box */}
             <div className="h-28 bg-[#0F1A2E] rounded-xl flex items-center justify-center p-2 overflow-hidden border border-gray-200 relative">
-              {currentOgImage && !ogImgError ? (
+              {safeOgImage && !ogImgError ? (
                 <img
-                  src={currentOgImage}
+                  src={safeOgImage}
                   alt="OG Image"
                   className="w-full h-full object-cover rounded-lg"
                   onError={() => setOgImgError(true)}

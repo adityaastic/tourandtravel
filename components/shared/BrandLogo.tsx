@@ -26,7 +26,15 @@ export default function BrandLogo({
       .then((r) => r.json())
       .then((data) => {
         if (data?.logoUrl) {
-          setLogoUrl(data.logoUrl);
+          let url = data.logoUrl;
+          if (url.includes('.r2.cloudflarestorage.com/')) {
+            const parts = url.split('.r2.cloudflarestorage.com/');
+            if (parts[1]) {
+              const cleanKey = parts[1].replace(/^justourism\//, '');
+              url = `/api/media/${cleanKey}`;
+            }
+          }
+          setLogoUrl(url);
         }
         if (data?.brandName) setBrandName(data.brandName);
         if (data?.name) setSubName(data.name);
