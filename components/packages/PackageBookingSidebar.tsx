@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, Users, CheckCircle2 } from 'lucide-react';
+import { Calendar, Users, CheckCircle2, Sparkles, Phone } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
-import UrgencyBadge from '@/components/shared/UrgencyBadge';
 import { SITE_CONFIG } from '@/lib/constants';
 
 interface PackageBookingSidebarProps {
@@ -18,7 +18,14 @@ export default function PackageBookingSidebar({ pkg }: PackageBookingSidebarProp
   const totalPrice = price * travelers;
   
   const handleBookWhatsApp = () => {
-    const message = `Hi Karuna Travels,\nI want to book the *${pkg.title}* package.\n\nDetails:\n- Date: ${travelDate || 'Not decided'}\n- Travelers: ${travelers}\n- Total Price Estimate: ₹${totalPrice.toLocaleString('en-IN')}\n\nPlease help me proceed.`;
+    const message = `Hi Just Tourism! I want to book the *${pkg.title}* package (${pkg.duration || 'Holiday'}).
+Details:
+- Date: ${travelDate || 'Flexible'}
+- Travelers: ${travelers}
+- Est. Price: ₹${totalPrice.toLocaleString('en-IN')}
+
+Please share itinerary details and confirm booking!`;
+
     window.open(buildWhatsAppLink(message), '_blank');
   };
 
@@ -27,94 +34,108 @@ export default function PackageBookingSidebar({ pkg }: PackageBookingSidebarProp
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-6 border border-gray-100 sticky top-24">
-      <div className="mb-6">
-        <h3 className="text-xl font-poppins font-semibold text-[#1B2A4A] mb-1">{pkg.title}</h3>
-        <p className="text-sm text-gray-500">{pkg.duration || `${pkg.days}D/${pkg.nights}N`}</p>
+    <div className="bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/80 shadow-xl sticky top-24 space-y-6">
+      <div>
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#F97316] bg-orange-50 px-2.5 py-0.5 rounded-full mb-1">
+          <Sparkles className="w-3 h-3" /> Handpicked Journey
+        </span>
+        <h3 className="text-xl font-poppins font-black text-neutral-900 leading-tight">{pkg.title}</h3>
+        <p className="text-xs text-neutral-500 font-medium">{pkg.duration}</p>
       </div>
 
-      <div className="mb-6 pb-6 border-b border-gray-100">
-        <p className="text-sm text-gray-500 mb-1">Starting from</p>
-        <div className="flex items-end gap-1">
-          <span className="text-3xl font-poppins font-bold text-[#F5A623]">
-            ₹{price.toLocaleString('en-IN')}
-          </span>
-          <span className="text-sm text-gray-500 mb-1">/person</span>
+      <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-neutral-100 flex items-center justify-between">
+        <div>
+          <p className="text-[11px] text-neutral-500 font-semibold uppercase tracking-wider">Starting Price</p>
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-poppins font-black text-[#F97316]">
+              ₹{price ? price.toLocaleString('en-IN') : 'Get Best Price'}
+            </span>
+            {price > 0 && <span className="text-xs text-neutral-500">/person</span>}
+          </div>
         </div>
       </div>
 
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Travel Date</label>
+          <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
+            Travel Date
+          </label>
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#F97316]" />
             <input 
               type="date" 
               value={travelDate}
+              min={new Date().toISOString().split('T')[0]}
               onChange={(e) => setTravelDate(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#F5A623] focus:border-transparent outline-none transition-all text-sm"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-[#F97316] outline-none text-xs font-semibold text-neutral-900 bg-neutral-50 cursor-pointer"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Travelers</label>
-          <div className="relative flex items-center bg-white border border-gray-200 rounded-xl overflow-hidden">
-            <Users className="absolute left-3 w-5 h-5 text-gray-400" />
-            <div className="w-full pl-10 pr-2 py-2 flex items-center justify-between">
-              <span className="text-sm font-medium">{travelers} {travelers === 1 ? 'Person' : 'People'}</span>
-              <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-1">
-                <button 
-                  onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                  className="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-gray-600 hover:text-[#F5A623]"
-                >-</button>
-                <span className="w-4 text-center text-sm font-semibold">{travelers}</span>
-                <button 
-                  onClick={() => setTravelers(travelers + 1)}
-                  className="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-gray-600 hover:text-[#F5A623]"
-                >+</button>
-              </div>
+          <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
+            Number of Travelers
+          </label>
+          <div className="relative flex items-center bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 justify-between">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-[#F97316]" />
+              <span className="text-xs font-bold text-neutral-900">{travelers} {travelers === 1 ? 'Person' : 'Persons'}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button 
+                type="button"
+                onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                className="w-7 h-7 flex items-center justify-center bg-white rounded-lg shadow-xs font-bold text-neutral-700 hover:text-[#F97316] cursor-pointer"
+              >-</button>
+              <span className="w-5 text-center text-xs font-bold">{travelers}</span>
+              <button 
+                type="button"
+                onClick={() => setTravelers(travelers + 1)}
+                className="w-7 h-7 flex items-center justify-center bg-white rounded-lg shadow-xs font-bold text-neutral-700 hover:text-[#F97316] cursor-pointer"
+              >+</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-[#EEF2FF] rounded-xl p-4 mb-6 flex justify-between items-center">
-        <span className="font-semibold text-[#1B2A4A]">Total Price</span>
-        <span className="font-poppins font-bold text-xl text-[#1B2A4A]">₹{totalPrice.toLocaleString('en-IN')}</span>
-      </div>
+      {price > 0 && (
+        <div className="pt-2 border-t border-neutral-100 flex justify-between items-center text-sm font-bold">
+          <span className="text-neutral-600">Total Est. Price:</span>
+          <span className="text-[#071A3D] text-lg font-poppins">₹{totalPrice.toLocaleString('en-IN')}</span>
+        </div>
+      )}
 
-      <div className="space-y-3 mb-6">
-        <button 
+      <div className="space-y-2.5">
+        <button
           onClick={handleBookWhatsApp}
-          className="w-full bg-[#F5A623] hover:bg-[#E8921A] text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 transition-all flex justify-center items-center gap-2"
+          className="w-full bg-[#F97316] hover:bg-[#EA580C] text-white py-3.5 rounded-2xl font-poppins font-bold text-xs sm:text-sm shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 transition-all hover:scale-102 active:scale-95 cursor-pointer"
         >
-          📱 Book on WhatsApp
+          <FaWhatsapp className="w-4 h-4" />
+          <span>Get Best Price on WhatsApp</span>
         </button>
-        <button 
+
+        <button
           onClick={handleCall}
-          className="w-full bg-white border-2 border-[#1B2A4A] text-[#1B2A4A] hover:bg-[#1B2A4A] hover:text-white font-semibold py-3 rounded-xl transition-all flex justify-center items-center gap-2"
+          className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 py-3 rounded-2xl font-poppins font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
         >
-          📞 Call to Book
+          <Phone className="w-3.5 h-3.5 text-[#F97316]" />
+          <span>Call: +91-9911209636</span>
         </button>
       </div>
 
-      <div className="mb-6">
-        <UrgencyBadge text="🔥 8 people viewed this package today" />
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-          <span>Free cancellation up to 48 hours</span>
+      {/* Trust Badges */}
+      <div className="space-y-1.5 pt-2 border-t border-neutral-100 text-[11px] text-neutral-500 font-medium">
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+          <span>Instant WhatsApp confirmation</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-          <span>Instant confirmation</span>
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+          <span>Transparent pricing · No hidden fees</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-          <span>Best price guarantee</span>
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+          <span>Sanitized cabs & verified stays</span>
         </div>
       </div>
     </div>

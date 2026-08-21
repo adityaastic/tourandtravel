@@ -4,16 +4,16 @@ import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
+import { Phone } from "lucide-react";
 
 export default function WhatsAppFAB() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 3000);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -29,33 +29,28 @@ export default function WhatsAppFAB() {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-3"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2.5"
         >
-          <AnimatePresence>
-            {isHovered && (
-              <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 10, opacity: 0 }}
-                className="bg-white px-4 py-2 rounded-lg shadow-lg font-medium text-sm text-[#1B2A4A]"
-              >
-                Chat with Us
-              </motion.div>
-            )}
-          </AnimatePresence>
-
+          {/* Quick Call Button */}
           <a
-            href="https://wa.me/919911209636?text=Hi!%20I%20found%20your%20website.%20I%20need%20travel%20help."
+            href="tel:+919911209636"
+            className="flex items-center justify-center w-11 h-11 bg-[#071A3D] hover:bg-[#0D2A57] text-white rounded-full shadow-lg border border-white/20 transition-all hover:scale-110 active:scale-95 group"
+            title="Call +91-9911209636"
+            aria-label="Call Just Tourism"
+          >
+            <Phone size={18} className="text-[#F97316]" />
+          </a>
+
+          {/* WhatsApp Button */}
+          <a
+            href="https://wa.me/919911209636?text=Hi!%20I%20found%20your%20website%20and%20want%20to%20plan%20a%20trip."
             target="_blank"
             rel="noopener noreferrer"
-            className="relative flex items-center justify-center w-14 h-14 bg-[#10B981] hover:bg-emerald-600 text-white rounded-full shadow-2xl transition-colors"
+            className="relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 bg-[#10B981] hover:bg-[#059669] text-white rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95"
+            title="Chat on WhatsApp"
+            aria-label="WhatsApp Just Tourism"
           >
-            {/* Pulse rings */}
-            <span className="absolute w-full h-full rounded-full bg-[#10B981] animate-ping opacity-75"></span>
-            <span className="absolute w-full h-full rounded-full border-2 border-[#10B981] scale-150 animate-pulse opacity-50"></span>
-            
+            <span className="absolute w-full h-full rounded-full bg-[#10B981] animate-ping opacity-50" />
             <FaWhatsapp size={28} className="relative z-10" />
           </a>
         </motion.div>

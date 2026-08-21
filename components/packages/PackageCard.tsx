@@ -19,7 +19,7 @@ export default function PackageCard({ pkg }: PackageCardProps) {
     <div className="group block w-full text-left">
       <div className="flex flex-col">
         {/* 1. Airbnb Photo Container with Wishlist Heart */}
-        <div className="relative aspect-[4/3] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-neutral-100 mb-2.5 sm:mb-3 shadow-xs group-hover:shadow-md transition-all duration-300">
+        <div className="relative aspect-[16/11] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-neutral-100 mb-2 sm:mb-2.5 shadow-xs group-hover:shadow-md transition-all duration-300">
           <Link href={`/packages/${pkg.slug}`} className="block w-full h-full">
             <PhotoPlaceholder 
               aspectRatio="4/3" 

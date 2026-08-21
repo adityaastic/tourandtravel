@@ -2,12 +2,12 @@ export const blogs = [
   {
     id: "1",
     slug: "top-10-places-manali-2024",
-    title: "Top 10 Places to Visit in Manali in 2024",
+    title: "Top 10 Places to Visit in Manali — The Ultimate Travel Guide",
     category: "Destination Guide",
     readTime: "8 min read",
     tags: ["Manali", "Mountains", "Guide"],
     photoSlot: "/images/blogs/manali-blog.jpg",
-    excerpt: "Discover the most breathtaking spots in Manali for your 2024 vacation. From the adventurous Rohtang Pass to the peaceful Old Manali cafes, here is our ultimate guide.",
+    excerpt: "Discover the most breathtaking spots in Manali for your dream vacation. From the adventurous Rohtang Pass to the peaceful Old Manali cafes, here is our ultimate guide.",
     content: `
 Manali continues to be one of the most beloved hill stations in India, and for good reason. Nestled in the mountains of the Indian state of Himachal Pradesh near the northern end of the Kullu Valley, Manali is an absolute delight for travelers.
 

@@ -2,38 +2,36 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import HeroSection from '@/components/home/HeroSection';
-import MarqueeStrip from '@/components/home/MarqueeStrip';
 import StatsBar from '@/components/home/StatsBar';
-import FeaturedPackages from '@/components/home/FeaturedPackages';
-import WhyChooseUs from '@/components/home/WhyChooseUs';
-import CarFleetPreview from '@/components/home/CarFleetPreview';
 import DestinationsGrid from '@/components/home/DestinationsGrid';
+import FeaturedPackages from '@/components/home/FeaturedPackages';
+import CustomTripPlanner from '@/components/home/CustomTripPlanner';
+import HowItWorks from '@/components/home/HowItWorks';
+import CarFleetPreview from '@/components/home/CarFleetPreview';
+import WhyChooseUs from '@/components/home/WhyChooseUs';
 import TestimonialsSlider from '@/components/home/TestimonialsSlider';
 import CallToAction from '@/components/home/CallToAction';
 import BlogPreview from '@/components/home/BlogPreview';
 import InstagramTeaser from '@/components/home/InstagramTeaser';
 
-// Reusable divider
-const WaveDivider = () => (
-  <div className="w-full overflow-hidden leading-[0] transform rotate-180">
-    <svg className="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-[#F8FAFF]"></path>
-    </svg>
-  </div>
-);
-
 export const metadata: Metadata = {
-  title: 'Karuna Travels - Just Tourism | Explore · Travel · Enjoy',
-  description: 'India\'s Most Trusted Travel Partner. Explore the world with Karuna Travels. We offer premium travel packages, car rentals, and custom itineraries.',
+  title: 'Just Tourism - Explore India. Create Memories. | Delhi Premier Travel Agency',
+  description: 'Curated holidays, premium stays, reliable cabs and personalized travel experiences from Delhi. Book tour packages to Kashmir, Manali, Shimla, Goa, Rajasthan, Kerala & car rentals. +91-9911209636',
+  openGraph: {
+    title: 'Just Tourism — Explore India. Create Memories.',
+    description: 'Curated holidays, premium stays, reliable cabs and personalized travel experiences across India and international destinations.',
+    url: 'https://www.justourism.com',
+    siteName: 'Just Tourism',
+    type: 'website',
+  },
 };
 
 export default function HomePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
-    "name": "Karuna Travels",
-    "alternateName": "Just Tourism",
-    "image": "https://karunatravels.com/logo.png",
+    "name": "Just Tourism",
+    "alternateName": "Karuna Travels",
     "description": "Delhi's Premier Travel Agency offering customized tour packages, premium car bookings, and safe travel experiences.",
     "address": {
       "@type": "PostalAddress",
@@ -44,39 +42,58 @@ export default function HomePage() {
     },
     "telephone": "+91-9911209636",
     "email": "karunadikoshiya000@gmail.com",
-    "url": "https://karunatravels.com",
+    "url": "https://www.justourism.com",
     "founder": {
       "@type": "Person",
       "name": "Karuna Suryawanshi"
     },
     "sameAs": [
-      "https://instagram.com/karunatravels"
+      "https://instagram.com/justtourism"
     ]
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFF]">
+    <main className="min-h-screen bg-[#F8FAFC]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       
+      {/* 1. Cinematic Hero with Floating Trip Planner */}
       <HeroSection />
-      <MarqueeStrip />
+
+      {/* 2. Verified Quick Trust Bar */}
       <StatsBar />
-      <WaveDivider />
-      <FeaturedPackages />
-      <WaveDivider />
-      <WhyChooseUs />
-      <WaveDivider />
-      <CarFleetPreview />
-      <WaveDivider />
+
+      {/* 3. Popular Destinations Bento Showcase */}
       <DestinationsGrid />
-      <WaveDivider />
+
+      {/* 4. Handpicked Tour Packages with Category Strips */}
+      <FeaturedPackages />
+
+      {/* 5. Interactive Custom Trip Planner */}
+      <CustomTripPlanner />
+
+      {/* 6. How It Works 5-Step Visual Timeline */}
+      <HowItWorks />
+
+      {/* 7. Travel Comfortably Fleet Preview */}
+      <CarFleetPreview />
+
+      {/* 8. The Just Tourism Advantage */}
+      <WhyChooseUs />
+
+      {/* 9. Verified Customer Reviews & Google Trust Badge */}
       <TestimonialsSlider />
-      <CallToAction />
+
+      {/* 10. Travel Blog Guides */}
       <BlogPreview />
+
+      {/* 11. Visual Travel Gallery & Social Showcase */}
       <InstagramTeaser />
+
+      {/* 12. Final High-Impact CTA */}
+      <CallToAction />
     </main>
   );
 }

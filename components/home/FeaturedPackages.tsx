@@ -31,7 +31,7 @@ export default function FeaturedPackages() {
         <ScrollFadeUp>
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 sm:mb-10 gap-3">
             <div>
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#F5A623] mb-1 block">
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#F97316] mb-1 block">
                 Curated Travel Collections
               </span>
               <h2 className="font-poppins font-black text-2xl sm:text-4xl text-neutral-900">
@@ -40,7 +40,7 @@ export default function FeaturedPackages() {
             </div>
             <Link 
               href="/packages" 
-              className="text-xs sm:text-sm font-bold text-neutral-800 hover:text-[#F5A623] underline underline-offset-4 transition-colors"
+              className="text-xs sm:text-sm font-bold text-neutral-800 hover:text-[#F97316] underline underline-offset-4 transition-colors"
             >
               Show all 20 packages
             </Link>
